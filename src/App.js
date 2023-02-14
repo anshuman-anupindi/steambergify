@@ -3,18 +3,13 @@ import TopGames from "./TopGames";
 import { useEffect, useState } from "react";
 
 function App() {
-  let [topTenGames, setTopTenGames] = useState([
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ]);
+  let [topTenGames, setTopTenGames] = useState([]);
+
+  let topTenGameDivs = topTenGames.map((topTenGame) => (
+    <div>{`${topTenGame.name},  ${String(
+      Math.round(Number(topTenGame.playtime_forever) / 60)
+    )} hours`}</div>
+  ));
 
   return (
     <div className="App">
@@ -22,12 +17,7 @@ function App() {
         topTenGames={topTenGames}
         setTopTenGames={setTopTenGames}
       ></TopGames>
-      <div>
-        {`${topTenGames.map((topTenGame) => [
-          topTenGame.name,
-          topTenGame.playtime_forever,
-        ])}`}
-      </div>
+      {topTenGameDivs}
     </div>
   );
 }
