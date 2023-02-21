@@ -1,26 +1,33 @@
 import "./App.css";
-import TopGames from "./TopGames";
 import { useEffect, useState } from "react";
+import fetchTopGamesWithSteamID from "./fetchTopGames";
 
 function App() {
-  let [topTenGames, setTopTenGames] = useState([]);
+  const [topTenGames, setTopTenGames] = useState([]);
+  const [steamID, setSteamID] = useState("");
 
-  let topTenGameDivs = topTenGames.map((topTenGame) => (
-    <div>{`${topTenGame.name},  ${String(
-      Math.round(Number(topTenGame.playtime_forever) / 60)
-    )} hours`}</div>
-  ));
+  async function updateTopTenGames(e) {
+    const newSteamID = e.target.value;
+    setSteamID(newSteamID);
+
+    const newTopTenGames = await fetchTopGamesWithSteamID(newSteamID);
+    setTopTenGames(newTopTenGames || []);
+  }
 
   return (
     <div className="App">
-      <TopGames
-        topTenGames={topTenGames}
-        setTopTenGames={setTopTenGames}
-      ></TopGames>
-      {topTenGameDivs}
+      <input onChange={updateTopTenGames} type="text"></input>
+      <div> {steamID} </div>
+      {topTenGames.map((topTenGame, idx) => (
+        <div key={idx}>
+          <div>{JSON.stringify(topTenGame)}</div>
+          <div>{`${topTenGame.name},  ${String(
+            Math.round(Number(topTenGame.playtime_forever) / 60)
+          )} hours, Tags:${topTenGame.topFiveGameTags}`}</div>
+        </div>
+      ))}
     </div>
   );
 }
 
 export default App;
-//
