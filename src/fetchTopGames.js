@@ -1,6 +1,7 @@
 import { getSteamIDFetchURL, getSteamSpyFetchURL } from "./helpers";
 
-export default async function fetchTopGamesWithSteamID(steamID) {
+async function fetchOwnedGamesWithTagsWithSteamID(steamID) {
+  console.log(`Fetching data...`);
   let totalGameList = await fetch(getSteamIDFetchURL(steamID))
     .then((res) => res.json())
     .then((data) => {
@@ -13,7 +14,7 @@ export default async function fetchTopGamesWithSteamID(steamID) {
   if (totalGameList === undefined) return [];
 
   const totalGameListWithTags = await addGameTagsToOwnedGames(totalGameList);
-  return getTopTenGames(totalGameListWithTags);
+  return totalGameListWithTags;
 }
 
 const getTopFiveTags = (gameTags) =>
@@ -39,9 +40,4 @@ async function addGameTagsToOwnedGames(totalGameList) {
   return totalGameList;
 }
 
-const getTopTenGames = (totalGameList) => {
-  let gamesByPlaytime = totalGameList.sort(
-    (gameA, gameB) => gameA.playtime_forever - gameB.playtime_forever
-  );
-  return gamesByPlaytime.reverse().slice(0, 10);
-};
+export { fetchOwnedGamesWithTagsWithSteamID };

@@ -1,31 +1,69 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import fetchTopGamesWithSteamID from "./fetchTopGames";
+import { useState } from "react";
+import React from "react";
+import Graph from "react-graph-vis";
+
+import { fetchOwnedGamesWithTagsWithSteamID } from "./fetchTopGames";
+import {
+  buildEdgeList,
+  buildGameListWithGraphInfo,
+  buildNodeList,
+} from "./helpers";
+
+const options = {
+  layout: {
+    hierarchical: true,
+  },
+  edges: {
+    color: "#000000",
+  },
+  height: "500px",
+};
 
 function App() {
-  const [topTenGames, setTopTenGames] = useState([]);
   const [steamID, setSteamID] = useState("");
+  const [graph, setGraph] = useState({ nodes: [], edges: [] });
+  const [ownedGames, setOwnedGames] = useState([]);
 
-  async function updateTopTenGames(e) {
+  async function updateGameInfoStates(e) {
     const newSteamID = e.target.value;
     setSteamID(newSteamID);
+    const newOwnedGames = await fetchOwnedGamesWithTagsWithSteamID(newSteamID);
 
-    const newTopTenGames = await fetchTopGamesWithSteamID(newSteamID);
-    setTopTenGames(newTopTenGames || []);
+    setOwnedGames(newOwnedGames || []);
+    const gameListWithGraphInfo = buildGameListWithGraphInfo(newOwnedGames);
+
+    console.log(`gameList: `, gameListWithGraphInfo);
+    await Promise.all([newOwnedGames, gameListWithGraphInfo]).then(
+      ([newOwnedGames, gameListWithGraphInfo]) =>
+        setGraph(
+          {
+            nodes: buildNodeList(newOwnedGames),
+            edges: buildEdgeList(newOwnedGames),
+            options: options,
+          } || undefined
+        )
+    );
   }
+  console.log(graph);
 
   return (
     <div className="App">
-      <input onChange={updateTopTenGames} type="text"></input>
+      <input
+        onChange={async (e) => await updateGameInfoStates(e)}
+        type="text"
+      ></input>
       <div> {steamID} </div>
-      {topTenGames.map((topTenGame, idx) => (
+      {ownedGames.map((ownedGame, idx) => (
         <div key={idx}>
-          <div>{JSON.stringify(topTenGame)}</div>
-          <div>{`${topTenGame.name},  ${String(
-            Math.round(Number(topTenGame.playtime_forever) / 60)
-          )} hours, Tags:${topTenGame.topFiveGameTags}`}</div>
+          <div>{`${ownedGame?.name},  ${String(
+            Math.round(Number(ownedGame?.playtime_forever) / 60)
+          )} hours, Tags:${Object.keys(ownedGame?.topFiveGameTags)}`}</div>
         </div>
       ))}
+      <div>
+        <Graph graph={graph}></Graph>
+      </div>
     </div>
   );
 }
