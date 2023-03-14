@@ -1,24 +1,15 @@
 import "./App.css";
 import { useState } from "react";
-import React from "react";
+import React, { useMemo } from "react";
 import Graph from "react-graph-vis";
 
-import { fetchOwnedGamesWithTagsWithSteamID } from "./fetchTopGames";
+import { fetchOwnedGamesWithTagsWithSteamID } from "./API/fetchGameInfo";
 import {
   buildEdgeList,
   buildGameListWithGraphInfo,
   buildNodeList,
-} from "./helpers";
-
-const options = {
-  layout: {
-    hierarchical: true,
-  },
-  edges: {
-    color: "#000000",
-  },
-  height: "500px",
-};
+} from "./GraphBuilder/graphBuilders";
+import { options } from "./GraphBuilder/graphConfig";
 
 function App() {
   const [steamID, setSteamID] = useState("");
@@ -34,18 +25,26 @@ function App() {
     const gameListWithGraphInfo = buildGameListWithGraphInfo(newOwnedGames);
 
     console.log(`gameList: `, gameListWithGraphInfo);
-    await Promise.all([newOwnedGames, gameListWithGraphInfo]).then(
-      ([newOwnedGames, gameListWithGraphInfo]) =>
-        setGraph(
-          {
-            nodes: buildNodeList(newOwnedGames),
-            edges: buildEdgeList(newOwnedGames),
-            options: options,
-          } || undefined
-        )
-    );
+
+    await Promise.all([newOwnedGames, gameListWithGraphInfo]).then((values) => {
+      console.error("Setting graph");
+      setGraph(
+        {
+          nodes: buildNodeList(values[1]),
+          edges: buildEdgeList(values[1]),
+          options: options,
+        } || undefined
+      );
+    });
   }
-  console.log(graph);
+
+  console.log(`graph: `, graph);
+
+  const GameGraph = useMemo(() => {
+    return () => (
+      <Graph graph={graph} options={options} style={{ height: "600px" }} />
+    );
+  }, [graph]);
 
   return (
     <div className="App">
@@ -56,13 +55,15 @@ function App() {
       <div> {steamID} </div>
       {ownedGames.map((ownedGame, idx) => (
         <div key={idx}>
-          <div>{`${ownedGame?.name},  ${String(
-            Math.round(Number(ownedGame?.playtime_forever) / 60)
-          )} hours, Tags:${Object.keys(ownedGame?.topFiveGameTags)}`}</div>
+          <div>
+            {`${ownedGame?.name},  ${String(
+              Math.round(Number(ownedGame?.playtime_forever) / 60)
+            )} hours, Tags:${Object.keys(ownedGame?.topFiveGameTags)}`}
+          </div>
         </div>
       ))}
       <div>
-        <Graph graph={graph}></Graph>
+        <GameGraph />
       </div>
     </div>
   );

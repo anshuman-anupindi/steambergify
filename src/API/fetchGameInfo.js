@@ -1,4 +1,6 @@
-import { getSteamIDFetchURL, getSteamSpyFetchURL } from "./helpers";
+import { getSteamIDFetchURL, getSteamSpyFetchURL } from "./URLBuilders";
+
+// dont move below function, call this file steamFetches
 
 async function fetchOwnedGamesWithTagsWithSteamID(steamID) {
   console.log(`Fetching data...`);
@@ -16,6 +18,8 @@ async function fetchOwnedGamesWithTagsWithSteamID(steamID) {
   const totalGameListWithTags = await addGameTagsToOwnedGames(totalGameList);
   return totalGameListWithTags;
 }
+
+// move below into other file, call it steamSpyFetches
 
 const getTopFiveTags = (gameTags) =>
   Object.fromEntries(Object.entries(gameTags).slice(0, 5));

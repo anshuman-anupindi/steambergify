@@ -1,4 +1,4 @@
-import { buildEdgeList, buildNodeList } from "../helpers";
+import { buildEdgeList, buildNodeList } from "../URLBuilders";
 
 describe("edgeBuilder", () => {
   const gameListWithGraphInfoTest = [
