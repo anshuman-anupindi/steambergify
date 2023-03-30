@@ -1,3 +1,8 @@
+import {
+  getGamesWithNumOfCommonTags,
+  rankingDataToCategoryByAscendingZScore,
+  nThCategoryToCartesianCoordinates,
+} from "./sortGamesOnCircle";
 const _ = require("underscore");
 
 function buildGameListWithGraphInfo(allOwnedGamesWithTags) {
@@ -8,6 +13,33 @@ function buildGameListWithGraphInfo(allOwnedGamesWithTags) {
       label: game?.name,
     };
   });
+}
+
+function buildNodeList(gameListWithGraphInfo) {
+  let gamesWithNumberOfCommonTags = getGamesWithNumOfCommonTags(
+    gameListWithGraphInfo
+  );
+  let ZScoreCategories = rankingDataToCategoryByAscendingZScore(
+    gamesWithNumberOfCommonTags
+  );
+  let gameID = 0;
+  let gamesWithCoordinates = ZScoreCategories.map((nThCategory, N) => {
+    return nThCategoryToCartesianCoordinates(
+      N,
+      gamesWithNumberOfCommonTags
+    ).map(([game, coordinates]) => {
+      gameID++;
+      return {
+        id: gameID,
+        title: game,
+        label: game,
+        x: coordinates[0],
+        y: coordinates[1],
+      };
+    });
+  });
+
+  return gamesWithCoordinates.flat();
 }
 
 function buildEdgeList(gameListWithGraphInfo) {
@@ -25,16 +57,6 @@ function buildEdgeList(gameListWithGraphInfo) {
     }
   }
   return edgeList;
-}
-
-function buildNodeList(gameListWithGraphInfo) {
-  return gameListWithGraphInfo.map((game) => {
-    return {
-      id: game.id,
-      title: game.label,
-      label: game.label,
-    };
-  });
 }
 
 export { buildGameListWithGraphInfo, buildEdgeList, buildNodeList };

@@ -24,8 +24,6 @@ function App() {
     setOwnedGames(newOwnedGames || []);
     const gameListWithGraphInfo = buildGameListWithGraphInfo(newOwnedGames);
 
-    console.log(`gameList: `, gameListWithGraphInfo);
-
     await Promise.all([newOwnedGames, gameListWithGraphInfo]).then((values) => {
       console.error("Setting graph");
       setGraph(

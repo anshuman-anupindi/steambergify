@@ -1,12 +1,11 @@
+import {
+  degreesToRadians,
+  polarCoordinatesToCartesian,
+  getZScoreFromTagCountAndMeanTagCount,
+  getRadiiForGamesInNthCategory,
+} from "./mathFunctions";
 const _ = require("underscore");
-const radiusBoundsForNthRingFromCentre = {
-  0: [0, 10],
-  1: [10, 20],
-  2: [20, 30],
-  3: [30, 40],
-  4: [40, 50],
-  5: [50, 60],
-};
+const math = require("mathjs");
 
 const gamesWithNumberOfCommonTagsIncrementer = (
   game,
@@ -22,7 +21,7 @@ const gamesWithNumberOfCommonTagsIncrementer = (
   }
 };
 
-const rankGamesByNumberOfCommonTags = (gameListWithGraphInfo) => {
+const getGamesWithNumOfCommonTags = (gameListWithGraphInfo) => {
   let gamesWithNumberOfCommonTags = {};
   for (let i = 0; i < gameListWithGraphInfo.length; i++) {
     const game = gameListWithGraphInfo[i];
@@ -46,4 +45,61 @@ const rankGamesByNumberOfCommonTags = (gameListWithGraphInfo) => {
   return gamesWithNumberOfCommonTags;
 };
 
-export { rankGamesByNumberOfCommonTags };
+const rankingDataToCategoryByAscendingZScore = (
+  gamesWithNumberOfCommonTags
+) => {
+  let numberOfCommonTags = Object.values(gamesWithNumberOfCommonTags);
+  let stdDeviation = math.std(
+    numberOfCommonTags.map((tagCount) => Number(tagCount))
+  );
+  let meanTagCount = math.mean(
+    numberOfCommonTags.map((tagCount) => Number(tagCount))
+  );
+  let iterableGamesWithNumberOfCommonTags = Object.entries(
+    gamesWithNumberOfCommonTags
+  );
+  let categories = [[], [], [], [], [], [], []];
+  iterableGamesWithNumberOfCommonTags.forEach(([game, tagCount]) => {
+    let gameZScore = getZScoreFromTagCountAndMeanTagCount(
+      tagCount,
+      meanTagCount,
+      stdDeviation
+    );
+    categories[gameZScore + 3].push(game);
+  });
+  return categories;
+};
+
+const nThCategoryToPolarCoordinates = (N, gamesWithNumberOfCommonTags) => {
+  let NthZScoreCategory = rankingDataToCategoryByAscendingZScore(
+    gamesWithNumberOfCommonTags
+  )[N];
+  let separationAngle = 360 / NthZScoreCategory.length;
+  let angle = 0;
+  let radius = getRadiiForGamesInNthCategory(10)[N];
+  let nThCategoryPolarCoordinates = [];
+  NthZScoreCategory.forEach((game) => {
+    angle += separationAngle;
+    nThCategoryPolarCoordinates.push([game, [radius, degreesToRadians(angle)]]);
+  });
+  return nThCategoryPolarCoordinates;
+};
+
+const nThCategoryToCartesianCoordinates = (N, gamesWithNumberOfCommonTags) => {
+  let gamesInNthCategoryInPolar = nThCategoryToPolarCoordinates(
+    N,
+    gamesWithNumberOfCommonTags
+  );
+  return gamesInNthCategoryInPolar.map(([game, gameCoordinates]) => [
+    game,
+    polarCoordinatesToCartesian(gameCoordinates[0], gameCoordinates[1]),
+  ]);
+};
+
+export {
+  getGamesWithNumOfCommonTags,
+  rankingDataToCategoryByAscendingZScore,
+  nThCategoryToCartesianCoordinates,
+  nThCategoryToPolarCoordinates,
+  gamesWithNumberOfCommonTagsIncrementer,
+};
