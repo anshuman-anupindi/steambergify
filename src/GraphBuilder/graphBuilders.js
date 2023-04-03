@@ -22,13 +22,14 @@ function buildNodeList(gameListWithGraphInfo) {
   let ZScoreCategories = rankingDataToCategoryByAscendingZScore(
     gamesWithNumberOfCommonTags
   );
-  let gameID = 0;
   let gamesWithCoordinates = ZScoreCategories.map((nThCategory, N) => {
     return nThCategoryToCartesianCoordinates(
       N,
       gamesWithNumberOfCommonTags
     ).map(([game, coordinates]) => {
-      gameID++;
+      let gameID = gameListWithGraphInfo.filter((gameObject) => {
+        return gameObject.label == game;
+      })[0].id;
       return {
         id: gameID,
         title: game,

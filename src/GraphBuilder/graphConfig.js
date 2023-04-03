@@ -12,7 +12,7 @@ const options = {
       max: 1000,
     },
   },
-  height: "900px",
+  height: "1000px",
   physics: {
     enabled: false,
     barnesHut: {
@@ -25,7 +25,4 @@ const options = {
     maxVelocity: 1,
   },
 };
-
-// use edges: {hidden: false} for non graph version
-
 export { options };

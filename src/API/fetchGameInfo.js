@@ -1,7 +1,5 @@
 import { getSteamIDFetchURL, getSteamSpyFetchURL } from "./URLBuilders";
 
-// dont move below function, call this file steamFetches
-
 async function fetchOwnedGamesWithTagsWithSteamID(steamID) {
   console.log(`Fetching data...`);
   let totalGameList = await fetch(getSteamIDFetchURL(steamID))
@@ -19,13 +17,10 @@ async function fetchOwnedGamesWithTagsWithSteamID(steamID) {
   return totalGameListWithTags;
 }
 
-// move below into other file, call it steamSpyFetches
-
 const getTopFiveTags = (gameTags) =>
   Object.fromEntries(Object.entries(gameTags).slice(0, 5));
 
 async function addGameTagsToOwnedGames(totalGameList) {
-  // awaits an array of Promises to be Fulfilled - this is an array of Game objects fetched from SteamSpyAPI
   await Promise.all(
     totalGameList.map((game, idx) => {
       let gameID = game.appid;
@@ -40,7 +35,6 @@ async function addGameTagsToOwnedGames(totalGameList) {
         });
     })
   );
-  // once the array of Promises is fulfilled, return the total game list.
   return totalGameList;
 }
 

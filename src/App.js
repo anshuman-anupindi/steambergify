@@ -50,16 +50,6 @@ function App() {
         onChange={async (e) => await updateGameInfoStates(e)}
         type="text"
       ></input>
-      <div> {steamID} </div>
-      {ownedGames.map((ownedGame, idx) => (
-        <div key={idx}>
-          <div>
-            {`${ownedGame?.name},  ${String(
-              Math.round(Number(ownedGame?.playtime_forever) / 60)
-            )} hours, Tags:${Object.keys(ownedGame?.topFiveGameTags)}`}
-          </div>
-        </div>
-      ))}
       <div>
         <GameGraph />
       </div>
