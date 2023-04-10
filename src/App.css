@@ -1,38 +1,43 @@
-.App {
-  text-align: center;
+body{
+  background: #252525;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.inp-border{
+	padding: 5px;
+
+	margin: 2vh 1vh;
+	border-radius: 67px;
+  max-width:200px;
+  
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+input{
+	font-size: 17px;
+}
+.input{
+	padding: 15px;
+	outline: none;
+	border:double 0;
+	background: #252525;
+	border-radius: 67px;
+	position: relative;
+	box-sizing: border-box;
+	display: block;
+  width: 100%;
+}
+.a1{
+  background: linear-gradient(330.28deg,#FF6E1D  100%,#FF6E1D  100%,#FF6E1D  100%);
+  
+}
+.a1 >input{
+  color: #FF6E1D;
+}
+.a1 >input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #FF6E1D;
+  opacity: 0.6; /* Firefox */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.inp-border:hover{
+		background: linear-gradient(330.28deg,#2CFFF2       0%, #1E78FF  30.73%, #FF54A6  55.73%, #FF6E1D       79.17%, #FF3E3E  100%);
 }

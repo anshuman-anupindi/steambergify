@@ -1,3 +1,4 @@
+import { getGameEdge, getGameNode } from "./graphConfig";
 import {
   getGamesWithNumOfCommonTags,
   rankingDataToCategoryByAscendingZScore,
@@ -15,6 +16,9 @@ function buildGameListWithGraphInfo(allOwnedGamesWithTags) {
   });
 }
 
+const getGameIDFromGraphInfo = (gameListWithGraphInfo, game) =>
+  gameListWithGraphInfo.filter((gameObject) => gameObject.label === game)[0].id;
+
 function buildNodeList(gameListWithGraphInfo) {
   let gamesWithNumberOfCommonTags = getGamesWithNumOfCommonTags(
     gameListWithGraphInfo
@@ -22,25 +26,17 @@ function buildNodeList(gameListWithGraphInfo) {
   let ZScoreCategories = rankingDataToCategoryByAscendingZScore(
     gamesWithNumberOfCommonTags
   );
-  let gamesWithCoordinates = ZScoreCategories.map((nThCategory, N) => {
+  let nodeListWithCoordinates = ZScoreCategories.map((_nThCategory, N) => {
     return nThCategoryToCartesianCoordinates(
       N,
       gamesWithNumberOfCommonTags
     ).map(([game, coordinates]) => {
-      let gameID = gameListWithGraphInfo.filter((gameObject) => {
-        return gameObject.label == game;
-      })[0].id;
-      return {
-        id: gameID,
-        title: game,
-        label: game,
-        x: coordinates[0],
-        y: coordinates[1],
-      };
+      let gameID = getGameIDFromGraphInfo(gameListWithGraphInfo, game);
+      return getGameNode(gameID, game, coordinates);
     });
-  });
+  }).flat();
 
-  return gamesWithCoordinates.flat();
+  return nodeListWithCoordinates;
 }
 
 function buildEdgeList(gameListWithGraphInfo) {
@@ -53,7 +49,7 @@ function buildEdgeList(gameListWithGraphInfo) {
       const otherGameTagList = Object.keys(otherGame.topFiveTags);
       const commonTags = _.intersection(gameTagList, otherGameTagList);
       commonTags.forEach((_commonTag) =>
-        edgeList.push({ from: game.id, to: otherGame.id })
+        edgeList.push(getGameEdge(game, otherGame))
       );
     }
   }

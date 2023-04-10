@@ -46,10 +46,15 @@ function App() {
 
   return (
     <div className="App">
-      <input
-        onChange={async (e) => await updateGameInfoStates(e)}
-        type="text"
-      ></input>
+      <div className="inp-border a1">
+        <input
+          className="input"
+          type="text"
+          name="name1"
+          placeholder="Enter your Steam ID."
+          onChange={async (e) => await updateGameInfoStates(e)}
+        />
+      </div>
       <div>
         <GameGraph />
       </div>

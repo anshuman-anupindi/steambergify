@@ -58,7 +58,7 @@ describe("getGamesWithNumOfCommonTags", () => {
     expect(math.std([0, 1, 2])).toEqual(1);
   });
 
-  it("rankingDataToCategoryByAscendingZScore works", () => {
+  it("rankingDataToCategoryByAscendingZScore for dummy gamesWithNumberOfCommonTags2", () => {
     expect(
       rankingDataToCategoryByAscendingZScore(gamesWithNumberOfCommonTags2)
     ).toEqual([
