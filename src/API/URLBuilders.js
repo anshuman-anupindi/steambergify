@@ -4,4 +4,6 @@ const getSteamIDFetchURL = (steamID) =>
 const getSteamSpyFetchURL = (gameID) =>
   `http://localhost:8080/http://steamspy.com/api.php?request=appdetails&appid=${gameID}`;
 
-export { getSteamIDFetchURL, getSteamSpyFetchURL };
+const steamIDTrimmer = (steamIDFromURL) => steamIDFromURL.trim().slice(1);
+
+export { getSteamIDFetchURL, getSteamSpyFetchURL, steamIDTrimmer };

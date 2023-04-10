@@ -1,15 +1,34 @@
 body{
   background: #252525;
+	font-family:Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.appTitle:hover {
+	font-size: xx-large;
+	font-weight: bold;
+	color: linear-gradient(330.28deg,#2CFFF2 0%, #1E78FF  30.73%, #FF54A6  55.73%, #FF6E1D  79.17%, #FF3E3E 100%);
+}
+
+.appTitle {
+	margin-left: 1%;
+	margin-top: 1%;
+	font-size: xx-large;
+	font-weight: bold;
+	background: linear-gradient(330.28deg,#2CFFF2 0%, #1E78FF  30.73%, #FF54A6  55.73%, #FF6E1D  79.17%, #FF3E3E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .inp-border{
 	padding: 5px;
-
 	margin: 2vh 1vh;
 	border-radius: 67px;
   max-width:200px;
-  
+}
+
+.submit {
+	size: 10px;
 }
 
 input{

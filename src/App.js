@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import Graph from "react-graph-vis";
 
 import { fetchOwnedGamesWithTagsWithSteamID } from "./API/fetchGameInfo";
+import { steamIDTrimmer } from "./API/URLBuilders";
 import {
   buildEdgeList,
   buildGameListWithGraphInfo,
@@ -43,15 +44,17 @@ function App() {
       <Graph graph={graph} options={options} style={{ height: "600px" }} />
     );
   }, [graph]);
-
+  // 76561198009874769
   return (
     <div className="App">
+      <div className="appTitle">Which game is most like your other games?</div>
       <div className="inp-border a1">
         <input
           className="input"
           type="text"
           name="name1"
           placeholder="Enter your Steam ID."
+          defaultValue={steamIDTrimmer(window.location.pathname) || ""}
           onChange={async (e) => await updateGameInfoStates(e)}
         />
       </div>
