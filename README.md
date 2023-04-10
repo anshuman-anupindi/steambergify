@@ -1,6 +1,6 @@
-# Steambergify - a Steam user data visualiser that highlights games most similar to other games you've played
+# Steambergify
 
-'Steam Wrapped'
+'Steam Wrapped' - a Steam user data visualiser that highlights games most similar to other games you've played
 
 ## Core
 
